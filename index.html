@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QQ宠物</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 顶部状态栏 -->
+    <div class="top-bar">
+      <div class="pet-name-badge">
+        <span id="petStage">幼崽</span>
+        <span id="petName">小花</span>
+      </div>
+      <div class="exp-display">经验 <span id="expVal">0</span></div>
+    </div>
+
+    <!-- 房间场景 -->
+    <div class="room" id="room">
+      <!-- 背景装饰 -->
+      <div class="room-bg">
+        <div class="window">
+          <div class="window-sky"></div>
+          <div class="window-cloud" style="left:10%;animation-delay:0s"></div>
+          <div class="window-cloud" style="left:50%;animation-delay:2s"></div>
+        </div>
+        <div class="shelf">
+          <div class="book" style="background:#e57373;width:18px"></div>
+          <div class="book" style="background:#64b5f6;width:24px"></div>
+          <div class="book" style="background:#81c784;width:16px"></div>
+          <div class="star-deco">⭐</div>
+        </div>
+        <div class="floor-rug"></div>
+      </div>
+
+      <!-- 飘浮气泡 -->
+      <div class="speech-bubble" id="speechBubble">
+        <span id="speechText">喵～叫我一声吧！</span>
+      </div>
+
+      <!-- 宠物SVG主体 -->
+      <div class="pet-container" id="petContainer">
+        <svg id="petSvg" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- 阴影 -->
+          <ellipse cx="100" cy="210" rx="45" ry="8" fill="rgba(0,0,0,0.1)" id="shadow"/>
+
+          <!-- 尾巴 -->
+          <path id="tail" d="M 70 170 Q 30 155 35 130 Q 40 115 55 120"
+                fill="none" stroke="#FFAB91" stroke-width="10" stroke-linecap="round"/>
+
+          <!-- 身体 -->
+          <ellipse cx="100" cy="168" rx="48" ry="42" fill="#FFCCBC" id="body"/>
+
+          <!-- 肚皮 -->
+          <ellipse cx="100" cy="172" rx="28" ry="26" fill="#FFE0D0" id="belly"/>
+
+          <!-- 头部 -->
+          <circle cx="100" cy="110" r="52" fill="#FFCCBC" id="head"/>
+
+          <!-- 耳朵 -->
+          <polygon points="52,72 40,40 72,62" fill="#FFCCBC" id="earL"/>
+          <polygon points="55,75 44,44 74,65" fill="#FFAB91" id="earLInner"/>
+          <polygon points="148,72 160,40 128,62" fill="#FFCCBC" id="earR"/>
+          <polygon points="145,75 156,44 126,65" fill="#FFAB91" id="earRInner"/>
+
+          <!-- 眼睛 -->
+          <g id="eyes">
+            <!-- 左眼 -->
+            <circle cx="82" cy="106" r="11" fill="white" id="eyeLWhite"/>
+            <circle cx="84" cy="107" r="7" fill="#5D4037" id="eyeLPupil"/>
+            <circle cx="86" cy="104" r="2.5" fill="white" id="eyeLShine"/>
+            <!-- 右眼 -->
+            <circle cx="118" cy="106" r="11" fill="white" id="eyeRWhite"/>
+            <circle cx="120" cy="107" r="7" fill="#5D4037" id="eyeRPupil"/>
+            <circle cx="122" cy="104" r="2.5" fill="white" id="eyeRShine"/>
+          </g>
+
+          <!-- 睡觉眼 (隐藏) -->
+          <g id="sleepEyes" style="display:none">
+            <path d="M 71 106 Q 82 99 93 106" fill="none" stroke="#5D4037" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 107 106 Q 118 99 129 106" fill="none" stroke="#5D4037" stroke-width="3" stroke-linecap="round"/>
+          </g>
+
+          <!-- 眯眼(开心) (隐藏) -->
+          <g id="happyEyes" style="display:none">
+            <path d="M 71 110 Q 82 100 93 110" fill="none" stroke="#5D4037" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 107 110 Q 118 100 129 110" fill="none" stroke="#5D4037" stroke-width="3.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- 哭眼 (隐藏) -->
+          <g id="sadEyes" style="display:none">
+            <circle cx="82" cy="109" r="11" fill="white"/>
+            <circle cx="82" cy="111" r="7" fill="#5D4037"/>
+            <circle cx="84" cy="108" r="2.5" fill="white"/>
+            <circle cx="118" cy="109" r="11" fill="white"/>
+            <circle cx="118" cy="111" r="7" fill="#5D4037"/>
+            <circle cx="120" cy="108" r="2.5" fill="white"/>
+            <!-- 泪水 -->
+            <ellipse cx="78" cy="122" rx="3" ry="5" fill="#90CAF9" opacity="0.8"/>
+            <ellipse cx="114" cy="122" rx="3" ry="5" fill="#90CAF9" opacity="0.8"/>
+          </g>
+
+          <!-- 鼻子 -->
+          <ellipse cx="100" cy="118" rx="5" ry="3.5" fill="#EF9A9A" id="nose"/>
+
+          <!-- 胡须 -->
+          <line x1="55" y1="115" x2="88" y2="118" stroke="#BDBDBD" stroke-width="1.5" opacity="0.7"/>
+          <line x1="55" y1="121" x2="88" y2="121" stroke="#BDBDBD" stroke-width="1.5" opacity="0.7"/>
+          <line x1="112" y1="118" x2="145" y2="115" stroke="#BDBDBD" stroke-width="1.5" opacity="0.7"/>
+          <line x1="112" y1="121" x2="145" y2="121" stroke="#BDBDBD" stroke-width="1.5" opacity="0.7"/>
+
+          <!-- 嘴巴 -->
+          <g id="mouth">
+            <path d="M 93 124 Q 100 131 107 124" fill="none" stroke="#EF9A9A" stroke-width="2.5" stroke-linecap="round" id="mouthHappy"/>
+          </g>
+
+          <!-- 吃东西 嘴巴 (隐藏) -->
+          <g id="eatMouth" style="display:none">
+            <ellipse cx="100" cy="127" rx="8" ry="6" fill="#C62828" opacity="0.8"/>
+          </g>
+
+          <!-- 悲伤嘴巴 (隐藏) -->
+          <g id="sadMouth" style="display:none">
+            <path d="M 93 128 Q 100 123 107 128" fill="none" stroke="#EF9A9A" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- 脸红 -->
+          <ellipse cx="72" cy="120" rx="10" ry="6" fill="#FFCDD2" opacity="0" id="blushL"/>
+          <ellipse cx="128" cy="120" rx="10" ry="6" fill="#FFCDD2" opacity="0" id="blushR"/>
+
+          <!-- 爪子 -->
+          <ellipse cx="63" cy="185" rx="18" ry="12" fill="#FFCCBC" id="pawL"/>
+          <ellipse cx="137" cy="185" rx="18" ry="12" fill="#FFCCBC" id="pawR"/>
+
+          <!-- 爱心（玩耍时） -->
+          <g id="hearts" style="display:none">
+            <text x="145" y="80" font-size="18" class="heart-float">❤️</text>
+            <text x="40" y="70" font-size="14" class="heart-float" style="animation-delay:0.5s">💕</text>
+          </g>
+
+          <!-- Zzz（睡觉时） -->
+          <g id="zzz" style="display:none">
+            <text x="148" y="88" font-size="14" class="zzz-float">z</text>
+            <text x="158" y="74" font-size="18" class="zzz-float" style="animation-delay:0.6s">z</text>
+            <text x="170" y="58" font-size="22" class="zzz-float" style="animation-delay:1.2s">Z</text>
+          </g>
+
+          <!-- 吃的食物图标 -->
+          <text id="foodIcon" x="100" y="75" font-size="28" text-anchor="middle" style="display:none">🍖</text>
+        </svg>
+      </div>
+
+      <!-- 地板物品 -->
+      <div class="floor-items">
+        <div class="item-bowl" id="bowl" title="食盆">🥣</div>
+        <div class="item-ball" id="ball" title="皮球">⚽</div>
+      </div>
+    </div>
+
+    <!-- 状态栏区域 -->
+    <div class="stats-panel">
+      <div class="stat-row">
+        <span class="stat-label">🍎 饱食度</span>
+        <div class="stat-bar-bg">
+          <div class="stat-bar hunger-bar" id="hungerBar"></div>
+        </div>
+        <span class="stat-num" id="hungerNum">80</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">😊 快乐度</span>
+        <div class="stat-bar-bg">
+          <div class="stat-bar happy-bar" id="happyBar"></div>
+        </div>
+        <span class="stat-num" id="happyNum">80</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">⚡ 体力值</span>
+        <div class="stat-bar-bg">
+          <div class="stat-bar energy-bar" id="energyBar"></div>
+        </div>
+        <span class="stat-num" id="energyNum">80</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">💧 清洁度</span>
+        <div class="stat-bar-bg">
+          <div class="stat-bar clean-bar" id="cleanBar"></div>
+        </div>
+        <span class="stat-num" id="cleanNum">80</span>
+      </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="action-panel">
+      <button class="action-btn feed-btn" onclick="app.feed()">
+        <span class="btn-icon">🍖</span>
+        <span class="btn-label">喂食</span>
+      </button>
+      <button class="action-btn play-btn" onclick="app.play()">
+        <span class="btn-icon">🎮</span>
+        <span class="btn-label">玩耍</span>
+      </button>
+      <button class="action-btn sleep-btn" onclick="app.sleep()">
+        <span class="btn-icon">💤</span>
+        <span class="btn-label">睡觉</span>
+      </button>
+      <button class="action-btn bath-btn" onclick="app.bath()">
+        <span class="btn-icon">🛁</span>
+        <span class="btn-label">洗澡</span>
+      </button>
+    </div>
+
+    <!-- 操作提示 -->
+    <div class="hint-bar" id="hintBar">点击按钮与宠物互动吧！</div>
+  </div>
+
+  <script src="js/pet.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
